@@ -357,6 +357,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
     tr_tracker_tier_t tier_ = 0;
     // TODO: can we have a recycled std::string to avoid excess heap allocation
     std::vector<std::string> file_tree_;
+    std::vector<std::string> webseeds_;
     std::string_view pieces_root_;
     int64_t file_length_ = 0;
 
@@ -368,6 +369,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         Files,
         FilesIgnored,
         PieceLayers,
+        UrlList,
     };
     State state_ = State::Top;
 
@@ -447,6 +449,13 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         if (state_ == State::PieceLayers && key(depth()) == "piece layers"sv)
         {
             std::cerr << __FILE__ << ':' << __LINE__ << " changing state from 'piece layers' to 'top'" << std::endl;
+            state_ = State::Top;
+            return true;
+        }
+
+        if (state_ == State::UrlList && key(depth()) == "url-list"sv)
+        {
+            std::cerr << __FILE__ << ':' << __LINE__ << " changing state from 'url-list' to 'top'" << std::endl;
             state_ = State::Top;
             return true;
         }
@@ -536,8 +545,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         auto const curdepth = depth();
         auto const curkey = currentKey();
         auto unhandled = bool{ false };
-        std::cerr << __FILE__ << ':' << __LINE__ << " Int[" << value << "] depth[" << depth() << "] currentKey[" << curkey
-                  << ']' << std::endl;
+        std::cerr << __FILE__ << ':' << __LINE__ << " Int[" << value << "] depth[" << depth() << "] currentKey[" << curkey << ']' << std::endl;
 
         if (state_ == State::FilesIgnored)
         {
@@ -639,6 +647,10 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                 std::cerr << __FILE__ << ':' << __LINE__ << " setting unhandled to true" << std::endl;
                 unhandled = true;
             }
+        }
+        else if (state_ == State::UrlList)
+        {
+            webseeds_.emplace_back(std::string{value});
         }
         else if (state_ == State::Files)
         {
