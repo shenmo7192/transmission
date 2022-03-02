@@ -1,0 +1,10 @@
+-[ ] parse webseeds
+  -[ ] hoffman list
+	  - [ ] parse
+	  - [ ] test
+  -[ ] getright list
+	  - [ ] parse
+	  - [ ] test
+  -[ ] getright single
+	  - [ ] parse
+	  - [ ] test
