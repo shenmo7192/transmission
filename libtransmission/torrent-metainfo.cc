@@ -489,6 +489,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                     auto const n = std::size(value) / sizeof(tr_sha1_digest_t);
                     tm_.pieces_.resize(n);
                     std::copy_n(std::data(value), std::size(value), reinterpret_cast<char*>(std::data(tm_.pieces_)));
+                    tm_.pieces_offset_ = context.tokenSpan().first;
                 }
                 else if (key(1) == "info"sv && (curkey == "name"sv || curkey == "name.utf-8"sv))
                 {
@@ -609,12 +610,6 @@ private:
         tm_.info_hash_ = *hash;
         tm_.info_hash_str_ = tr_sha1_to_string(tm_.info_hash_);
         tm_.info_dict_size_ = std::size(info_dict_benc);
-
-        // In addition, remember the offset of the pieces dictionary entry.
-        // This will be useful when we load piece checksums on demand.
-        auto constexpr Key = "6:pieces"sv;
-        auto const pit = std::search(std::begin(info_dict_benc), std::end(info_dict_benc), std::begin(Key), std::end(Key));
-        tm_.pieces_offset_ = tm_.info_dict_offset_ + std::distance(std::begin(info_dict_benc), pit) + std::size(Key);
 
         return true;
     }
