@@ -368,7 +368,6 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         Files,
         FilesIgnored,
         PieceLayers,
-        UrlList,
     };
     State state_ = State::Top;
 
@@ -448,13 +447,6 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         if (state_ == State::PieceLayers && key(depth()) == "piece layers"sv)
         {
             std::cerr << __FILE__ << ':' << __LINE__ << " changing state from 'piece layers' to 'top'" << std::endl;
-            state_ = State::Top;
-            return true;
-        }
-
-        if (state_ == State::UrlList && key(depth()) == "url-list"sv)
-        {
-            std::cerr << __FILE__ << ':' << __LINE__ << " changing state from 'url-list' to 'top'" << std::endl;
             state_ = State::Top;
             return true;
         }
@@ -648,10 +640,6 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                 unhandled = true;
             }
         }
-        else if (state_ == State::UrlList)
-        {
-            tm_.addWebseed(value);
-        }
         else if (state_ == State::Files)
         {
             if (curdepth > 1 && key(curdepth - 1) == "path"sv)
@@ -708,6 +696,11 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                 else if (curkey == "encoding"sv)
                 {
                     encoding_ = tr_strvStrip(value);
+                }
+                else if (curkey == "url-list"sv)
+                {
+                    std::cerr << __FILE__ << ':' << __LINE__ << " adding webseed url [" << value << ']' << std::endl;
+                    tm_.addWebseed(value);
                 }
                 else
                 {

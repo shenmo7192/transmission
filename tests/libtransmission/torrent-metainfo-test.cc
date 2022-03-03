@@ -218,5 +218,14 @@ TEST_F(TorrentMetainfoTest, GetRightStyleWebseedList)
     EXPECT_EQ("http://webseed-two.com/"sv, tm.webseed(1));
 }
 
+TEST_F(TorrentMetainfoTest, GetRightStyleWebseedString)
+{
+    auto const src_filename = tr_strvJoin(LIBTRANSMISSION_TEST_ASSETS_DIR, "/webseed-getright-string.torrent"sv);
+    auto tm = tr_torrent_metainfo{};
+    EXPECT_TRUE(tm.parseTorrentFile(src_filename));
+    EXPECT_EQ(1, tm.webseedCount());
+    EXPECT_EQ("http://www.webseed-one.com/"sv, tm.webseed(0));
+}
+
 } // namespace test
 } // namespace libtransmission
