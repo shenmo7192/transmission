@@ -194,5 +194,19 @@ TEST_F(TorrentMetainfoTest, ctorSaveContents)
     tr_ctorFree(ctor);
 }
 
+TEST_F(TorrentMetainfoTest, HoffmanStyleWebseeds)
+{
+    auto const src_filename = tr_strvJoin(LIBTRANSMISSION_TEST_ASSETS_DIR, "/debian-11.2.0-amd64-DVD-1.iso.torrent"sv);
+    auto tm = tr_torrent_metainfo{};
+    EXPECT_TRUE(tm.parseTorrentFile(src_filename));
+    EXPECT_EQ(2, tm.webseedCount());
+    EXPECT_EQ(
+        "https://cdimage.debian.org/cdimage/release/11.2.0//srv/cdbuilder.debian.org/dst/deb-cd/weekly-builds/amd64/iso-dvd/debian-11.2.0-amd64-DVD-1.iso"sv,
+        tm.webseed(0));
+    EXPECT_EQ(
+        "https://cdimage.debian.org/cdimage/archive/11.2.0//srv/cdbuilder.debian.org/dst/deb-cd/weekly-builds/amd64/iso-dvd/debian-11.2.0-amd64-DVD-1.iso"sv,
+        tm.webseed(1));
+}
+
 } // namespace test
 } // namespace libtransmission

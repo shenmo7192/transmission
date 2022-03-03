@@ -357,7 +357,6 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
     tr_tracker_tier_t tier_ = 0;
     // TODO: can we have a recycled std::string to avoid excess heap allocation
     std::vector<std::string> file_tree_;
-    std::vector<std::string> webseeds_;
     std::string_view pieces_root_;
     int64_t file_length_ = 0;
 
@@ -651,7 +650,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         }
         else if (state_ == State::UrlList)
         {
-            webseeds_.emplace_back(std::string{ value });
+            tm_.addWebseed(value);
         }
         else if (state_ == State::Files)
         {
@@ -718,9 +717,17 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                 break;
 
             case 2:
+                std::cerr << __FILE__ << ':' << __LINE__ << " depth is 2, key(0) " << key(0) << " key(1) " << key(1)
+                          << std::endl;
+
                 if (key(1) == "info"sv && curkey == "source"sv)
                 {
                     tr_strvUtf8Clean(value, tm_.source_);
+                }
+                else if (key(1) == "httpseeds"sv)
+                {
+                    std::cerr << __FILE__ << ':' << __LINE__ << " adding webseed url [" << value << ']' << std::endl;
+                    tm_.addWebseed(value);
                 }
                 else if (key(1) == "info"sv && curkey == "pieces"sv)
                 {

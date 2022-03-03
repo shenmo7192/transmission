@@ -1,7 +1,7 @@
 -[ ] parse webseeds
-  -[ ] hoffman list
-	  - [ ] parse
-	  - [ ] test
+  -[x] hoffman list
+	  - [x] parse
+	  - [x] test
   -[ ] getright list
 	  - [ ] parse
 	  - [ ] test
