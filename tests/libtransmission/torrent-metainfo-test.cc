@@ -208,5 +208,15 @@ TEST_F(TorrentMetainfoTest, HoffmanStyleWebseeds)
         tm.webseed(1));
 }
 
+TEST_F(TorrentMetainfoTest, GetRightStyleWebseedList)
+{
+    auto const src_filename = tr_strvJoin(LIBTRANSMISSION_TEST_ASSETS_DIR, "/webseed-getright-list.torrent"sv);
+    auto tm = tr_torrent_metainfo{};
+    EXPECT_TRUE(tm.parseTorrentFile(src_filename));
+    EXPECT_EQ(2, tm.webseedCount());
+    EXPECT_EQ("http://www.webseed-one.com/"sv, tm.webseed(0));
+    EXPECT_EQ("http://webseed-two.com/"sv, tm.webseed(1));
+}
+
 } // namespace test
 } // namespace libtransmission

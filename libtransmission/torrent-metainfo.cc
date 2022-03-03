@@ -724,7 +724,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
                 {
                     tr_strvUtf8Clean(value, tm_.source_);
                 }
-                else if (key(1) == "httpseeds"sv)
+                else if (key(1) == "httpseeds"sv || key(1) == "url-list"sv)
                 {
                     std::cerr << __FILE__ << ':' << __LINE__ << " adding webseed url [" << value << ']' << std::endl;
                     tm_.addWebseed(value);
