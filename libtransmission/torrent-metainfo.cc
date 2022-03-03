@@ -545,7 +545,8 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         auto const curdepth = depth();
         auto const curkey = currentKey();
         auto unhandled = bool{ false };
-        std::cerr << __FILE__ << ':' << __LINE__ << " Int[" << value << "] depth[" << depth() << "] currentKey[" << curkey << ']' << std::endl;
+        std::cerr << __FILE__ << ':' << __LINE__ << " Int[" << value << "] depth[" << depth() << "] currentKey[" << curkey
+                  << ']' << std::endl;
 
         if (state_ == State::FilesIgnored)
         {
@@ -650,7 +651,7 @@ struct MetainfoHandler final : public transmission::benc::BasicHandler<MaxBencDe
         }
         else if (state_ == State::UrlList)
         {
-            webseeds_.emplace_back(std::string{value});
+            webseeds_.emplace_back(std::string{ value });
         }
         else if (state_ == State::Files)
         {
