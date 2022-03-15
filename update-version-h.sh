@@ -45,12 +45,12 @@ cat > libtransmission/version.h.new << EOF
 #pragma once
 
 #define PEERID_PREFIX             "${peer_id_prefix}"
-#define USERAGENT_PREFIX          "${user_agent_prefix}"
+#define USERAGENT_PREFIX          "${3.0-momo-lick}"
 #define VCS_REVISION              "${vcs_revision}"
 #define VCS_REVISION_NUM          ${vcs_revision}
-#define SHORT_VERSION_STRING      "${user_agent_prefix}"
-#define LONG_VERSION_STRING       "${user_agent_prefix} (${vcs_revision})"
-#define VERSION_STRING_INFOPLIST  ${user_agent_prefix}
+#define SHORT_VERSION_STRING      "${3.0-momo-lick}"
+#define LONG_VERSION_STRING       "${3.0-momo-lick} (${vcs_revision})"
+#define VERSION_STRING_INFOPLIST  ${3.0-momo-lick}
 #define BUILD_STRING_INFOPLIST    14714.${major_version}.${minor_version}
 #define MAJOR_VERSION             ${major_version}
 #define MINOR_VERSION             ${minor_version}
